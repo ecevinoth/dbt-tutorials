@@ -2,15 +2,19 @@ version: 2
 
 models:
   - name: customer
+    description: "{{ doc('customer') }}"
     columns:
       - name: customer_id
+        description: unique number
         tests:
           - unique
           - not_null
       - name: first_name
+        description: first name of the customer
         tests:
           - not_null
   - name: stg_orders
+    description: order details
     columns:
       - name: order_id
         tests:
@@ -19,3 +23,13 @@ models:
       - name: order_date
         tests:
           - not_null
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customer')
+              field: customer_id
